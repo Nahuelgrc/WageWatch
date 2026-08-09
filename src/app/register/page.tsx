@@ -66,7 +66,7 @@ export default function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 rounded border border-slate-700 bg-slate-800 px-3 py-1.5 text-slate-100"
               required
-              minLength={6}
+              minLength={8}
             />
           </label>
           {error && <p className="text-sm text-red-400">{error}</p>}

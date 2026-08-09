@@ -49,6 +49,7 @@ export default function PaymentsPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- data fetch on mount
     loadPayments();
   }, []);
 

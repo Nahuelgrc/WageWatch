@@ -69,7 +69,9 @@ export default function DashboardPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- data fetch on mount/month change
     loadEntries();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monthCursor]);
 
   const entriesByDate = useMemo(() => {

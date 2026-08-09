@@ -16,6 +16,8 @@ export const users = pgTable("users", {
   hourlyRate: numeric("hourly_rate", { precision: 10, scale: 2 })
     .notNull()
     .default("0"),
+  failedAttempts: integer("failed_attempts").notNull().default(0),
+  lockedUntil: timestamp("locked_until"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

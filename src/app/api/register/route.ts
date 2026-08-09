@@ -7,7 +7,7 @@ import { users } from "@/db/schema";
 
 const registerSchema = z.object({
   username: z.string().trim().min(3, "Must be at least 3 characters").max(50),
-  password: z.string().min(6, "Must be at least 6 characters"),
+  password: z.string().min(8, "Must be at least 8 characters"),
 });
 
 export async function POST(req: Request) {
