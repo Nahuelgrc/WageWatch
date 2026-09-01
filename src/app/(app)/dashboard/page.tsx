@@ -138,6 +138,7 @@ export default function DashboardPage() {
               <tbody>
                 {weeks.map((week) => {
                   const weekTotalSeconds = week.reduce((sum, day) => {
+                    if (!isSameMonth(day, monthCursor)) return sum;
                     const entry = entriesByDate.get(toISO(day));
                     return sum + (entry ? entry.seconds : 0);
                   }, 0);
