@@ -138,7 +138,6 @@ export default function DashboardPage() {
               <tbody>
                 {weeks.map((week) => {
                   const weekTotalSeconds = week.reduce((sum, day) => {
-                    if (!isSameMonth(day, monthCursor)) return sum;
                     const entry = entriesByDate.get(toISO(day));
                     return sum + (entry ? entry.seconds : 0);
                   }, 0);
@@ -162,11 +161,11 @@ export default function DashboardPage() {
                               } ${isToday(day) ? "ring-1 ring-slate-600" : ""}`}
                             >
                               <span>{format(day, "d")}</span>
-                              {entry && (
-                                <span className="text-[10px] font-semibold leading-tight">
-                                  {formatHMS(entry.seconds)}
-                                </span>
-                              )}
+                              <span
+                                className={`text-[10px] font-semibold leading-tight ${entry ? "" : "invisible"}`}
+                              >
+                                {entry ? formatHMS(entry.seconds) : "0:00:00"}
+                              </span>
                             </button>
                           </td>
                         );
