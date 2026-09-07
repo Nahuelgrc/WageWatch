@@ -45,6 +45,7 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [editingDate, setEditingDate] = useState<string | null>(null);
+  const [hourlyRate, setHourlyRate] = useState(0);
 
   const rangeStart = startOfWeek(startOfMonth(monthCursor), {
     weekStartsOn: 1,
@@ -74,6 +75,15 @@ export default function DashboardPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monthCursor]);
 
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((data) => {
+        setHourlyRate(Number(data.hourlyRate ?? 0));
+      })
+      .catch(() => {});
+  }, []);
+
   const entriesByDate = useMemo(() => {
     const map = new Map<string, Entry>();
     for (const e of entries) map.set(e.date, e);
@@ -86,6 +96,8 @@ export default function DashboardPage() {
   const monthlyTotalSeconds = entries
     .filter((e) => isSameMonth(parseISO(e.date), monthCursor))
     .reduce((sum, e) => sum + e.seconds, 0);
+
+  const monthlyEarned = (monthlyTotalSeconds / 3600) * hourlyRate;
 
   return (
     <div className="flex flex-col gap-6">
@@ -105,6 +117,9 @@ export default function DashboardPage() {
               Month total:{" "}
               <span className="font-semibold text-slate-100">
                 {formatHMS(monthlyTotalSeconds)}
+              </span>{" "}
+              <span className="font-bold text-green-400">
+                ${monthlyEarned.toFixed(2)}
               </span>
             </p>
           </div>
