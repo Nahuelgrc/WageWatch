@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/db";
-import { paydays, users } from "@/db/schema";
+import { paydays, users, workEntries } from "@/db/schema";
 import { getSessionUserId } from "@/lib/session";
 
 export async function GET() {
@@ -22,9 +22,15 @@ export async function GET() {
     .where(eq(paydays.userId, userId))
     .orderBy(paydays.dayOfMonth);
 
+  const [totals] = await db
+    .select({ totalSeconds: sql<number>`coalesce(sum(${workEntries.seconds}), 0)` })
+    .from(workEntries)
+    .where(eq(workEntries.userId, userId));
+
   return NextResponse.json({
     hourlyRate: user?.hourlyRate ?? "0",
     paydays: paydayRows.map((p) => p.dayOfMonth),
+    totalSeconds: Number(totals?.totalSeconds ?? 0),
   });
 }
 

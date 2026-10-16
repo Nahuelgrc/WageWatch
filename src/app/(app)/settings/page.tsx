@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { formatHMS } from "@/lib/time";
 
 export default function SettingsPage() {
   const [hourlyRate, setHourlyRate] = useState("");
   const [paydays, setPaydays] = useState<number[]>([]);
   const [newPayday, setNewPayday] = useState("");
+  const [totalSeconds, setTotalSeconds] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,6 +19,7 @@ export default function SettingsPage() {
       .then((data) => {
         setHourlyRate(data.hourlyRate ?? "0");
         setPaydays(data.paydays ?? []);
+        setTotalSeconds(data.totalSeconds ?? 0);
       })
       .catch(() => setError("Could not load settings"))
       .finally(() => setLoading(false));
@@ -67,6 +70,12 @@ export default function SettingsPage() {
   return (
     <div className="max-w-lg rounded-lg border border-slate-800 bg-slate-900 p-4">
       <h2 className="mb-4 text-sm font-semibold text-slate-200">Settings</h2>
+
+      <div className="mb-5 rounded border border-slate-800 bg-slate-800/50 px-3 py-2">
+        <span className="text-sm text-slate-400">Total hours worked (all time)</span>
+        <p className="mt-0.5 text-lg font-semibold text-slate-100">{formatHMS(totalSeconds)}</p>
+      </div>
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <label className="flex flex-col text-sm text-slate-400">
           Hourly rate ($)
